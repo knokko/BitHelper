@@ -73,9 +73,9 @@ public class ByteArrayBitOutput extends BitOutput {
 	@Override
 	public void ensureExtraCapacityCapacity(int booleans) {
 		int extra = booleans / 8;
-		if(booleans - extra * 8 + boolIndex < 8)//recently changed this from ... boolIndex < 8 to ... boolIndex >= 8
+		if(booleans - extra * 8 + boolIndex >= 8)//recently changed this from ... boolIndex < 8 to ... boolIndex >= 8
 			extra++;
-		int newLength = byteIndex + extra;
+		int newLength = byteIndex + extra + 1;
 		if(newLength > bytes.length)
 			bytes = Arrays.copyOf(bytes, newLength);
 	}
