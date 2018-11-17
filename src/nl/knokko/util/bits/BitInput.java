@@ -1,15 +1,15 @@
-/* 
+/*******************************************************************************
  * The MIT License
  *
- * Copyright 2018 20182191.
+ * Copyright (c) 2018 knokko
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
+ *  of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ *  
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
@@ -20,282 +20,285 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
+ *******************************************************************************/
 package nl.knokko.util.bits;
 
 public abstract class BitInput {
-	
+
 	public abstract boolean readDirectBoolean();
-	
+
 	public abstract byte readDirectByte();
-	
+
 	public abstract void increaseCapacity(int booleans);
-	
+
 	public abstract void terminate();
-	
+
 	public abstract void skip(long amount);
-	
-	public char readDirectChar(){
+
+	public char readDirectChar() {
 		return BitHelper.makeChar(readDirectByte(), readDirectByte());
 	}
-	
-	public short readDirectShort(){
+
+	public short readDirectShort() {
 		return BitHelper.makeShort(readDirectByte(), readDirectByte());
 	}
-	
-	public int readDirectInt(){
+
+	public int readDirectInt() {
 		return BitHelper.makeInt(readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte());
 	}
-	
-	public float readDirectFloat(){
+
+	public float readDirectFloat() {
 		return Float.intBitsToFloat(readDirectInt());
 	}
-	
-	public long readDirectLong(){
-		return BitHelper.makeLong(readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte());
+
+	public long readDirectLong() {
+		return BitHelper.makeLong(readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(),
+				readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte());
 	}
-	
-	public double readDirectDouble(){
+
+	public double readDirectDouble() {
 		return Double.longBitsToDouble(readDirectLong());
 	}
-	
-	public boolean readBoolean(){
+
+	public boolean readBoolean() {
 		increaseCapacity(1);
 		return readDirectBoolean();
 	}
-	
-	public boolean[] readBooleans(int amount){
+
+	public boolean[] readBooleans(int amount) {
 		boolean[] booleans = new boolean[amount];
 		readBooleans(booleans);
 		return booleans;
 	}
-	
-	public void readBooleans(boolean[] booleans, int startIndex, int amount){
+
+	public void readBooleans(boolean[] booleans, int startIndex, int amount) {
 		increaseCapacity(amount);
-		for(int i = 0; i < amount; i++)
+		for (int i = 0; i < amount; i++)
 			booleans[startIndex + i] = readDirectBoolean();
 	}
-	
-	public void readBooleans(boolean[] booleans){
+
+	public void readBooleans(boolean[] booleans) {
 		readBooleans(booleans, 0, booleans.length);
 	}
-	
-	public boolean[] readBooleanArray(){
+
+	public boolean[] readBooleanArray() {
 		boolean[] booleans = new boolean[readInt()];
 		readBooleans(booleans);
 		return booleans;
 	}
-	
-	public byte readByte(){
+
+	public byte readByte() {
 		increaseCapacity(8);
 		return readDirectByte();
 	}
-	
-	public byte[] readBytes(int amount){
+
+	public byte[] readBytes(int amount) {
 		byte[] bytes = new byte[amount];
 		readBytes(bytes);
 		return bytes;
 	}
-	
-	public void readBytes(byte[] bytes, int startIndex, int amount){
+
+	public void readBytes(byte[] bytes, int startIndex, int amount) {
 		increaseCapacity(amount * 8);
-		for(int i = 0; i < amount; i++)
+		for (int i = 0; i < amount; i++)
 			bytes[startIndex + i] = readDirectByte();
 	}
-	
-	public void readBytes(byte[] bytes){
+
+	public void readBytes(byte[] bytes) {
 		readBytes(bytes, 0, bytes.length);
 	}
-	
-	public byte[] readByteArray(){
+
+	public byte[] readByteArray() {
 		byte[] bytes = new byte[readInt()];
 		readBytes(bytes);
 		return bytes;
 	}
-	
-	public char readChar(){
+
+	public char readChar() {
 		increaseCapacity(16);
 		return BitHelper.makeChar(readDirectByte(), readDirectByte());
 	}
-	
-	public char[] readChars(int amount){
+
+	public char[] readChars(int amount) {
 		char[] chars = new char[amount];
 		readChars(chars);
 		return chars;
 	}
-	
-	public void readChars(char[] chars, int startIndex, int length){
+
+	public void readChars(char[] chars, int startIndex, int length) {
 		increaseCapacity(length * 16);
-		for(int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++)
 			chars[startIndex + i] = readDirectChar();
 	}
-	
-	public void readChars(char[] chars){
+
+	public void readChars(char[] chars) {
 		readChars(chars, 0, chars.length);
 	}
-	
-	public char[] readCharArray(){
+
+	public char[] readCharArray() {
 		char[] chars = new char[readInt()];
 		readChars(chars);
 		return chars;
 	}
-	
-	public short readShort(){
+
+	public short readShort() {
 		increaseCapacity(16);
 		return BitHelper.makeShort(readDirectByte(), readDirectByte());
 	}
-	
-	public short[] readShorts(int amount){
+
+	public short[] readShorts(int amount) {
 		short[] shorts = new short[amount];
 		readShorts(shorts);
 		return shorts;
 	}
-	
-	public void readShorts(short[] shorts, int startIndex, int length){
+
+	public void readShorts(short[] shorts, int startIndex, int length) {
 		increaseCapacity(16 * length);
-		for(int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++)
 			shorts[startIndex + i] = readDirectShort();
 	}
-	
-	public void readShorts(short[] shorts){
+
+	public void readShorts(short[] shorts) {
 		readShorts(shorts, 0, shorts.length);
 	}
-	
-	public short[] readShortArray(){
+
+	public short[] readShortArray() {
 		short[] shorts = new short[readInt()];
 		readShorts(shorts);
 		return shorts;
 	}
-	
-	public int readInt(){
+
+	public int readInt() {
 		increaseCapacity(32);
 		return BitHelper.makeInt(readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte());
 	}
-	
-	public int[] readInts(int amount){
+
+	public int[] readInts(int amount) {
 		int[] ints = new int[amount];
 		readInts(ints);
 		return ints;
 	}
-	
-	public void readInts(int[] ints, int startIndex, int length){
+
+	public void readInts(int[] ints, int startIndex, int length) {
 		increaseCapacity(32 * length);
-		for(int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++)
 			ints[startIndex + i] = readDirectInt();
 	}
-	
-	public void readInts(int[] ints){
+
+	public void readInts(int[] ints) {
 		readInts(ints, 0, ints.length);
 	}
-	
-	public int[] readIntArray(){
+
+	public int[] readIntArray() {
 		int[] ints = new int[readInt()];
 		readInts(ints);
 		return ints;
 	}
-	
-	public float readFloat(){
+
+	public float readFloat() {
 		return Float.intBitsToFloat(readInt());
 	}
-	
-	public float[] readFloats(int amount){
+
+	public float[] readFloats(int amount) {
 		float[] floats = new float[amount];
 		readFloats(floats);
 		return floats;
 	}
-	
-	public void readFloats(float[] floats, int startIndex, int length){
+
+	public void readFloats(float[] floats, int startIndex, int length) {
 		increaseCapacity(32 * length);
-		for(int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++)
 			floats[startIndex + i] = readDirectFloat();
 	}
-	
-	public void readFloats(float[] floats){
+
+	public void readFloats(float[] floats) {
 		readFloats(floats, 0, floats.length);
 	}
-	
-	public float[] readFloatArray(){
+
+	public float[] readFloatArray() {
 		float[] floats = new float[readInt()];
 		readFloats(floats);
 		return floats;
 	}
-	
-	public long readLong(){
+
+	public long readLong() {
 		increaseCapacity(64);
-		return BitHelper.makeLong(readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte());
+		return BitHelper.makeLong(readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte(),
+				readDirectByte(), readDirectByte(), readDirectByte(), readDirectByte());
 	}
-	
-	public long[] readLongs(int amount){
+
+	public long[] readLongs(int amount) {
 		long[] longs = new long[amount];
 		readLongs(longs);
 		return longs;
 	}
-	
-	public void readLongs(long[] longs, int startIndex, int length){
+
+	public void readLongs(long[] longs, int startIndex, int length) {
 		increaseCapacity(64 * length);
-		for(int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++)
 			longs[startIndex + i] = readDirectLong();
 	}
-	
-	public void readLongs(long[] longs){
+
+	public void readLongs(long[] longs) {
 		readLongs(longs, 0, longs.length);
 	}
-	
-	public long[] readLongArray(){
+
+	public long[] readLongArray() {
 		long[] longs = new long[readInt()];
 		readLongs(longs);
 		return longs;
 	}
-	
-	public double readDouble(){
+
+	public double readDouble() {
 		return Double.longBitsToDouble(readLong());
 	}
-	
-	public double[] readDoubles(int amount){
+
+	public double[] readDoubles(int amount) {
 		double[] doubles = new double[amount];
 		readDoubles(doubles);
 		return doubles;
 	}
-	
-	public void readDoubles(double[] doubles, int startIndex, int length){
+
+	public void readDoubles(double[] doubles, int startIndex, int length) {
 		increaseCapacity(64 * length);
-		for(int i = 0; i < length; i++)
+		for (int i = 0; i < length; i++)
 			doubles[startIndex + i] = readDirectDouble();
 	}
-	
-	public void readDoubles(double[] doubles){
+
+	public void readDoubles(double[] doubles) {
 		readDoubles(doubles, 0, doubles.length);
 	}
-	
-	public double[] readDoubleArray(){
+
+	public double[] readDoubleArray() {
 		double[] doubles = new double[readInt()];
 		readDoubles(doubles);
 		return doubles;
 	}
-	
-	public long readNumber(byte bitCount, boolean allowNegative){
+
+	public long readNumber(byte bitCount, boolean allowNegative) {
 		byte size = bitCount;
-		if(allowNegative)
+		if (allowNegative)
 			size++;
 		return BitHelper.numberFromBinary(readBooleans(size), bitCount, allowNegative);
 	}
-	
-	public long readNumber(boolean allowNegative){
+
+	public long readNumber(boolean allowNegative) {
 		return readNumber((byte) readNumber((byte) 6, false), allowNegative);
 	}
-	
-	public String readJavaString(){
+
+	public String readJavaString() {
 		return readJavaString(1000);
 	}
-	
-	public String readJavaString(int maxLength){
+
+	public String readJavaString(int maxLength) {
 		int amount = readInt();
-		if(amount == -1)
+		if (amount == -1)
 			return null;
-		if(amount > maxLength) throw new RuntimeException("amount is " + amount + " and maxLength is " + maxLength);
+		if (amount > maxLength)
+			throw new RuntimeException("amount is " + amount + " and maxLength is " + maxLength);
 		byte bitCount = (byte) (readNumber((byte) 4, false) + 1);
 		char[] chars = new char[amount];
-		for(int i = 0; i < chars.length; i++)
+		for (int i = 0; i < chars.length; i++)
 			chars[i] = (char) readNumber(bitCount, false);
 		return new String(chars);
 	}
