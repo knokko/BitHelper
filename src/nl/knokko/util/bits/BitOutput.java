@@ -23,6 +23,10 @@
  *******************************************************************************/
 package nl.knokko.util.bits;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 public abstract class BitOutput {
 
 	public static byte getRequiredBits(long number) {
@@ -366,6 +370,15 @@ public abstract class BitOutput {
 					addDirectNumber(string.charAt(index) - min, bitCount, false);
 				}
 			}
+		}
+	}
+	
+	public void addStringMap(Map<String,String> map) {
+		Set<Entry<String,String>> entrySet = map.entrySet();
+		addInt(map.size());
+		for (Entry<String,String> entry : entrySet) {
+			addString(entry.getKey());
+			addString(entry.getValue());
 		}
 	}
 }

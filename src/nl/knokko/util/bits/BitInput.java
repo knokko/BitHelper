@@ -23,6 +23,9 @@
  *******************************************************************************/
 package nl.knokko.util.bits;
 
+import java.util.HashMap;
+import java.util.TreeMap;
+
 public abstract class BitInput {
 
 	public abstract boolean readDirectBoolean();
@@ -362,5 +365,23 @@ public abstract class BitInput {
 			}
 			return new String(result);
 		}
+	}
+	
+	public HashMap<String,String> readStringHashMap(){
+		int size = readInt();
+		HashMap<String,String> result = new HashMap<String,String>(size);
+		for (int counter = 0; counter < size; counter++) {
+			result.put(readString(), readString());
+		}
+		return result;
+	}
+	
+	public TreeMap<String,String> readStringTreeMap(){
+		int size = readInt();
+		TreeMap<String,String> result = new TreeMap<String,String>();
+		for (int counter = 0; counter < size; counter++) {
+			result.put(readString(), readString());
+		}
+		return result;
 	}
 }
