@@ -36,8 +36,8 @@ public class ByteArrayBitInput extends BitInput {
 	private final byte[] bytes;
 
 	public static ByteArrayBitInput fromFile(File file) throws IOException {
-		if (file.length() > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("File too large (" + file.length() + ")");
+		if (file.length() > 2000000000)
+			throw new IOException("File too large (" + file.length() + ")");
 		int length = (int) file.length();
 		byte[] bytes = new byte[length];
 		FileInputStream input = new FileInputStream(file);
