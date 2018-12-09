@@ -144,6 +144,7 @@ public abstract class BitOutput {
 	}
 
 	public void addChar(char value) {
+		System.out.println("BitOutput.addChar: char0 is " + BitHelper.char0(value) + " and char1 is " + BitHelper.char1(value));
 		addBytes(BitHelper.char0(value), BitHelper.char1(value));
 	}
 
@@ -262,6 +263,10 @@ public abstract class BitOutput {
 	public void addNumber(long number, byte bitCount, boolean allowNegative) {
 		addBooleans(BitHelper.numberToBinary(number, bitCount, allowNegative));
 	}
+	
+	public void addDirectNumber(long number, byte bitCount, boolean allowNegative) {
+		addDirectBooleans(BitHelper.numberToBinary(number, bitCount, allowNegative));
+	}
 
 	public void addNumber(long number, boolean allowNegative) {
 		if (!allowNegative && number < 0)
@@ -270,6 +275,16 @@ public abstract class BitOutput {
 		if (allowNegative)
 			bitCount++;
 		ensureExtraCapacityCapacity(6 + bitCount);
+		addDirectBooleans(BitHelper.numberToBinary(bitCount, (byte) 6, false));
+		addDirectBooleans(BitHelper.numberToBinary(number, bitCount, allowNegative));
+	}
+	
+	public void addDirectNumber(long number, boolean allowNegative) {
+		if (!allowNegative && number < 0)
+			throw new IllegalArgumentException("Number (" + number + ") can't be negative!");
+		byte bitCount = getRequiredBits(number);
+		if (allowNegative)
+			bitCount++;
 		addDirectBooleans(BitHelper.numberToBinary(bitCount, (byte) 6, false));
 		addDirectBooleans(BitHelper.numberToBinary(number, bitCount, allowNegative));
 	}
@@ -300,5 +315,57 @@ public abstract class BitOutput {
 		addNumber(bitCount - 1, (byte) 4, false);
 		for (int i = 0; i < string.length(); i++)
 			addNumber(string.charAt(i), bitCount, false);
+	}
+	
+	public void addString(String string) {
+		if (string == null) {
+			// This is all it takes to support null strings
+			addByte((byte) 0);
+			return;
+		}
+		ensureExtraCapacityCapacity(29);
+		if (string.length() < 254) {
+			// This should be the most common case, only 1 byte is needed to store the size of the string
+			addDirectByte((byte) (string.length() + 1));
+		} else {
+			// In this case, 1 byte is more or less wasted, but the else will not often be reached
+			// And if the else is being reached, 1 byte is not much compared to the rest of the
+			// bytes needed to store the string.
+			ensureExtraCapacityCapacity(32);
+			addDirectByte((byte) 255);
+			addDirectInt(string.length());
+		}
+		if (string.length() > 0) {
+			// If the string is empty, there is no need to store anything but the size
+			// which should be stored already.
+			char min = Character.MAX_VALUE;
+			char max = Character.MIN_VALUE;
+			for (int index = 0; index < string.length(); index++) {
+				char current = string.charAt(index);
+				if (current > max) {
+					max = current;
+				}
+				if (current < min) {
+					min = current;
+				}
+			}
+			int difference = max - min;
+			byte bitCount;
+			if (difference == 0) {
+				bitCount = 0;
+			} else {
+				bitCount = getRequiredBits(difference);
+			}
+			addDirectChar(min);
+			// bitCount is in range [0, 16]
+			addDirectNumber(bitCount, (byte) 5, false);
+			if (difference > 0) {
+				// If the difference is 0, no more information is required.
+				ensureExtraCapacityCapacity(bitCount * string.length());
+				for (int index = 0; index < string.length(); index++) {
+					addDirectNumber(string.charAt(index) - min, bitCount, false);
+				}
+			}
+		}
 	}
 }

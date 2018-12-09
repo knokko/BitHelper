@@ -70,15 +70,30 @@ public abstract class BitInput {
 		readBooleans(booleans);
 		return booleans;
 	}
+	
+	public boolean[] readDirectBooleans(int amount) {
+		boolean[] booleans = new boolean[amount];
+		readDirectBooleans(booleans);
+		return booleans;
+	}
 
 	public void readBooleans(boolean[] booleans, int startIndex, int amount) {
 		increaseCapacity(amount);
 		for (int i = 0; i < amount; i++)
 			booleans[startIndex + i] = readDirectBoolean();
 	}
+	
+	public void readDirectBooleans(boolean[] booleans, int startIndex, int amount) {
+		for (int i = 0; i < amount; i++)
+			booleans[startIndex + i] = readDirectBoolean();
+	}
 
 	public void readBooleans(boolean[] booleans) {
 		readBooleans(booleans, 0, booleans.length);
+	}
+	
+	public void readDirectBooleans(boolean[] booleans) {
+		readDirectBooleans(booleans, 0, booleans.length);
 	}
 
 	public boolean[] readBooleanArray() {
@@ -281,9 +296,20 @@ public abstract class BitInput {
 			size++;
 		return BitHelper.numberFromBinary(readBooleans(size), bitCount, allowNegative);
 	}
+	
+	public long readDirectNumber(byte bitCount, boolean allowNegative) {
+		byte size = bitCount;
+		if (allowNegative)
+			size++;
+		return BitHelper.numberFromBinary(readDirectBooleans(size), bitCount, allowNegative);
+	}
 
 	public long readNumber(boolean allowNegative) {
 		return readNumber((byte) readNumber((byte) 6, false), allowNegative);
+	}
+	
+	public long readDirectNumber(boolean allowNegative) {
+		return readDirectNumber((byte) readDirectNumber((byte) 6, false), allowNegative);
 	}
 
 	public String readJavaString() {
@@ -301,5 +327,40 @@ public abstract class BitInput {
 		for (int i = 0; i < chars.length; i++)
 			chars[i] = (char) readNumber(bitCount, false);
 		return new String(chars);
+	}
+	
+	public String readString() {
+		return readString(1000);
+	}
+	
+	public String readString(int maxLength) {
+		int amount1 = readByte() & 0xFF;
+		if (amount1 == 0)
+			return null;
+		int length;
+		if (amount1 < 255) {
+			length = amount1 - 1;
+		} else {
+			length = readInt();
+		}
+		if (length == 0)
+			return "";
+		increaseCapacity(21);
+		char min = readDirectChar();
+		byte bitCount = (byte) readDirectNumber((byte) 5, false);
+		if (bitCount == 0) {
+			char[] result = new char[length];
+			for (int index = 0; index < length; index++) {
+				result[index] = min;
+			}
+			return new String(result);
+		} else {
+			increaseCapacity(bitCount * length);
+			char[] result = new char[length];
+			for (int index = 0; index < length; index++) {
+				result[index] = (char) (min + readDirectNumber(bitCount, false));
+			}
+			return new String(result);
+		}
 	}
 }
