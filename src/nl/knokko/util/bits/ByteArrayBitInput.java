@@ -24,7 +24,6 @@
 package nl.knokko.util.bits;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ByteArrayBitInput extends BitInput {
@@ -36,17 +35,7 @@ public class ByteArrayBitInput extends BitInput {
 	private final byte[] bytes;
 
 	public static ByteArrayBitInput fromFile(File file) throws IOException {
-		if (file.length() > 2000000000)
-			throw new IOException("File too large (" + file.length() + ")");
-		int length = (int) file.length();
-		byte[] bytes = new byte[length];
-		FileInputStream input = new FileInputStream(file);
-		int index = 0;
-		while (index < length) {
-			index += input.read(bytes, index, length - index);
-		}
-		input.close();
-		return new ByteArrayBitInput(bytes);
+		return new ByteArrayBitInput(BitHelper.readFile(file));
 	}
 
 	public ByteArrayBitInput(byte[] bytes) {

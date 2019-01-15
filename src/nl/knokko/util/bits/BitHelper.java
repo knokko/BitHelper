@@ -23,6 +23,11 @@
  *******************************************************************************/
 package nl.knokko.util.bits;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+
 public final class BitHelper {
 
 	private static final long[] POWERS = new long[63];
@@ -160,6 +165,8 @@ public final class BitHelper {
 		}
 		return bools;
 	}
+	
+	// Ripped from java.nio.Bits
 
 	public static byte char1(char x) {
 		return (byte) (x >> 8);
@@ -224,6 +231,8 @@ public final class BitHelper {
 	public static byte long0(long x) {
 		return (byte) (x);
 	}
+	
+	// End of ripped content
 
 	public static byte byteFromBinary(boolean[] source) {
 		/*
@@ -325,6 +334,8 @@ public final class BitHelper {
 	public static long get2Power(int index) {
 		return POWERS[index];
 	}
+	
+	// Ripped from java.nio.Bits
 
 	public static char makeChar(byte b0, byte b1) {
 		return (char) ((b1 << 8) | (b0 & 0xff));
@@ -342,5 +353,28 @@ public final class BitHelper {
 		return ((((long) b7) << 56) | (((long) b6 & 0xff) << 48) | (((long) b5 & 0xff) << 40)
 				| (((long) b4 & 0xff) << 32) | (((long) b3 & 0xff) << 24) | (((long) b2 & 0xff) << 16)
 				| (((long) b1 & 0xff) << 8) | (((long) b0 & 0xff)));
+	}
+	
+	// End of ripped content
+	
+	public static byte[] readFile(File file) throws IOException {
+		if (file.length() > 2000000000)
+			throw new IOException("File too large (" + file.length() + ")");
+		int length = (int) file.length();
+		byte[] bytes = new byte[length];
+		InputStream input = Files.newInputStream(file.toPath());
+		int index = 0;
+		while (index < length) {
+			int read = input.read(bytes, index, length - index);
+			System.out.println("read " + read + " bytes");
+			if (read != -1) {
+				index += read;
+			} else {
+				input.close();
+				throw new IOException("End of file was reached before expected");
+			}
+		}
+		input.close();
+		return bytes;
 	}
 }
