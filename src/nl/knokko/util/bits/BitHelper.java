@@ -366,7 +366,6 @@ public final class BitHelper {
 		int index = 0;
 		while (index < length) {
 			int read = input.read(bytes, index, length - index);
-			System.out.println("read " + read + " bytes");
 			if (read != -1) {
 				index += read;
 			} else {
