@@ -45,7 +45,7 @@ public abstract class BitOutput {
 
 	public abstract void addDirectByte(byte value);
 
-	public abstract void ensureExtraCapacityCapacity(int booleans);
+	public abstract void ensureExtraCapacity(int booleans);
 
 	public abstract void terminate();
 
@@ -85,41 +85,41 @@ public abstract class BitOutput {
 	}
 
 	public void addBoolean(boolean value) {
-		ensureExtraCapacityCapacity(1);
+		ensureExtraCapacity(1);
 		addDirectBoolean(value);
 	}
 
 	public void addBooleans(boolean... bools) {
-		ensureExtraCapacityCapacity(bools.length);
+		ensureExtraCapacity(bools.length);
 		for (boolean bool : bools)
 			addDirectBoolean(bool);
 	}
 
 	public void addBooleanArray(boolean[] value) {
-		ensureExtraCapacityCapacity(32 + value.length);
+		ensureExtraCapacity(32 + value.length);
 		addDirectInt(value.length);
 		addDirectBooleans(value);
 	}
 
 	public void addByte(byte value) {
-		ensureExtraCapacityCapacity(8);
+		ensureExtraCapacity(8);
 		addDirectByte(value);
 	}
 
 	public void addBytes(byte... bytes) {
-		ensureExtraCapacityCapacity(bytes.length * 8);
+		ensureExtraCapacity(bytes.length * 8);
 		for (byte b : bytes)
 			addDirectByte(b);
 	}
 
 	public void addBytes(byte[] bytes, int startIndex, int amount) {
-		ensureExtraCapacityCapacity(amount * 8);
+		ensureExtraCapacity(amount * 8);
 		for (int i = 0; i < amount; i++)
 			addDirectByte(bytes[startIndex + i]);
 	}
 
 	public void addByteArray(byte[] value) {
-		ensureExtraCapacityCapacity(32 + value.length * 8);
+		ensureExtraCapacity(32 + value.length * 8);
 		addDirectInt(value.length);
 		addDirectBytes(value);
 	}
@@ -129,43 +129,42 @@ public abstract class BitOutput {
 	}
 
 	public void addShorts(short... shorts) {
-		ensureExtraCapacityCapacity(shorts.length * 16);
+		ensureExtraCapacity(shorts.length * 16);
 		for (short s : shorts)
 			addDirectShort(s);
 	}
 
 	public void addShorts(short[] shorts, int startIndex, int amount) {
-		ensureExtraCapacityCapacity(16 * amount);
+		ensureExtraCapacity(16 * amount);
 		for (int i = 0; i < amount; i++)
 			addDirectShort(shorts[startIndex + i]);
 	}
 
 	public void addShortArray(short[] value) {
-		ensureExtraCapacityCapacity(32 + value.length * 16);
+		ensureExtraCapacity(32 + value.length * 16);
 		addDirectInt(value.length);
 		for (short s : value)
 			addDirectShort(s);
 	}
 
 	public void addChar(char value) {
-		System.out.println("BitOutput.addChar: char0 is " + BitHelper.char0(value) + " and char1 is " + BitHelper.char1(value));
 		addBytes(BitHelper.char0(value), BitHelper.char1(value));
 	}
 
 	public void addChars(char... chars) {
-		ensureExtraCapacityCapacity(chars.length * 16);
+		ensureExtraCapacity(chars.length * 16);
 		for (char c : chars)
 			addDirectChar(c);
 	}
 
 	public void addChars(char[] chars, int startIndex, int amount) {
-		ensureExtraCapacityCapacity(amount * 16);
+		ensureExtraCapacity(amount * 16);
 		for (int i = 0; i < amount; i++)
 			addDirectChar(chars[startIndex + i]);
 	}
 
 	public void addCharArray(char[] value) {
-		ensureExtraCapacityCapacity(32 + value.length * 16);
+		ensureExtraCapacity(32 + value.length * 16);
 		addDirectInt(value.length);
 		for (char c : value)
 			addDirectChar(c);
@@ -176,19 +175,19 @@ public abstract class BitOutput {
 	}
 
 	public void addInts(int... ints) {
-		ensureExtraCapacityCapacity(ints.length * 32);
+		ensureExtraCapacity(ints.length * 32);
 		for (int i : ints)
 			addDirectInt(i);
 	}
 
 	public void addInts(int[] ints, int startIndex, int amount) {
-		ensureExtraCapacityCapacity(amount * 32);
+		ensureExtraCapacity(amount * 32);
 		for (int i = 0; i < amount; i++)
 			addDirectInt(ints[startIndex + i]);
 	}
 
 	public void addIntArray(int[] value) {
-		ensureExtraCapacityCapacity(32 + value.length * 32);
+		ensureExtraCapacity(32 + value.length * 32);
 		addDirectInt(value.length);
 		for (int i : value)
 			addDirectInt(i);
@@ -199,19 +198,19 @@ public abstract class BitOutput {
 	}
 
 	public void addFloats(float... floats) {
-		ensureExtraCapacityCapacity(floats.length * 32);
+		ensureExtraCapacity(floats.length * 32);
 		for (float f : floats)
 			addDirectFloat(f);
 	}
 
 	public void addFloats(float[] floats, int startIndex, int amount) {
-		ensureExtraCapacityCapacity(32 * amount);
+		ensureExtraCapacity(32 * amount);
 		for (int i = 0; i < amount; i++)
 			addDirectFloat(floats[startIndex + i]);
 	}
 
 	public void addFloatArray(float[] value) {
-		ensureExtraCapacityCapacity(32 + value.length * 32);
+		ensureExtraCapacity(32 + value.length * 32);
 		addDirectInt(value.length);
 		for (float f : value)
 			addDirectFloat(f);
@@ -223,19 +222,19 @@ public abstract class BitOutput {
 	}
 
 	public void addLongs(long... longs) {
-		ensureExtraCapacityCapacity(64 * longs.length);
+		ensureExtraCapacity(64 * longs.length);
 		for (long l : longs)
 			addDirectLong(l);
 	}
 
 	public void addLongs(long[] longs, int startIndex, int amount) {
-		ensureExtraCapacityCapacity(64 * amount);
+		ensureExtraCapacity(64 * amount);
 		for (int i = 0; i < amount; i++)
 			addDirectLong(longs[startIndex + 1]);
 	}
 
 	public void addLongArray(long[] value) {
-		ensureExtraCapacityCapacity(32 + value.length * 64);
+		ensureExtraCapacity(32 + value.length * 64);
 		addDirectInt(value.length);
 		for (long l : value)
 			addDirectLong(l);
@@ -246,19 +245,19 @@ public abstract class BitOutput {
 	}
 
 	public void addDoubles(double... doubles) {
-		ensureExtraCapacityCapacity(64 * doubles.length);
+		ensureExtraCapacity(64 * doubles.length);
 		for (double d : doubles)
 			addDirectDouble(d);
 	}
 
 	public void addDoubles(double[] doubles, int startIndex, int amount) {
-		ensureExtraCapacityCapacity(64 * amount);
+		ensureExtraCapacity(64 * amount);
 		for (int i = 0; i < amount; i++)
 			addDirectDouble(doubles[startIndex + i]);
 	}
 
 	public void addDoubleArray(double[] value) {
-		ensureExtraCapacityCapacity(32 + value.length * 64);
+		ensureExtraCapacity(32 + value.length * 64);
 		addDirectInt(value.length);
 		for (double d : value)
 			addDirectDouble(d);
@@ -278,7 +277,7 @@ public abstract class BitOutput {
 		byte bitCount = getRequiredBits(number);
 		if (allowNegative)
 			bitCount++;
-		ensureExtraCapacityCapacity(6 + bitCount);
+		ensureExtraCapacity(6 + bitCount);
 		addDirectBooleans(BitHelper.numberToBinary(bitCount, (byte) 6, false));
 		addDirectBooleans(BitHelper.numberToBinary(number, bitCount, allowNegative));
 	}
@@ -314,7 +313,7 @@ public abstract class BitOutput {
 
 		// maximum is 2^16 - 1 --> maximum bitCount is 16
 		// ensureCapacity(writeIndex + 32 + 4 + bitCount * string.length());
-		ensureExtraCapacityCapacity(32 + 4 + bitCount * string.length());
+		ensureExtraCapacity(32 + 4 + bitCount * string.length());
 		addInt(string.length());
 		addNumber(bitCount - 1, (byte) 4, false);
 		for (int i = 0; i < string.length(); i++)
@@ -327,7 +326,7 @@ public abstract class BitOutput {
 			addByte((byte) 0);
 			return;
 		}
-		ensureExtraCapacityCapacity(29);
+		ensureExtraCapacity(29);
 		if (string.length() < 254) {
 			// This should be the most common case, only 1 byte is needed to store the size of the string
 			addDirectByte((byte) (string.length() + 1));
@@ -335,7 +334,7 @@ public abstract class BitOutput {
 			// In this case, 1 byte is more or less wasted, but the else will not often be reached
 			// And if the else is being reached, 1 byte is not much compared to the rest of the
 			// bytes needed to store the string.
-			ensureExtraCapacityCapacity(32);
+			ensureExtraCapacity(32);
 			addDirectByte((byte) 255);
 			addDirectInt(string.length());
 		}
@@ -365,7 +364,7 @@ public abstract class BitOutput {
 			addDirectNumber(bitCount, (byte) 5, false);
 			if (difference > 0) {
 				// If the difference is 0, no more information is required.
-				ensureExtraCapacityCapacity(bitCount * string.length());
+				ensureExtraCapacity(bitCount * string.length());
 				for (int index = 0; index < string.length(); index++) {
 					addDirectNumber(string.charAt(index) - min, bitCount, false);
 				}

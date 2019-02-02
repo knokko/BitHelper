@@ -90,7 +90,7 @@ public class BitOutputStream extends BitOutput {
 	}
 
 	@Override
-	public void ensureExtraCapacityCapacity(int booleans) {
+	public void ensureExtraCapacity(int booleans) {
 	}
 
 	@Override
@@ -101,6 +101,7 @@ public class BitOutputStream extends BitOutput {
 				subData = null;
 			}
 			subIndex = 0;
+			output.flush();
 			output.close();
 		} catch (IOException ex) {
 		}
