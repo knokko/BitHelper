@@ -57,8 +57,10 @@ public class BooleanArrayBitOutput extends BitOutput {
 	}
 
 	@Override
-	public void ensureExtraCapacityCapacity(int booleans) {
-		int newLength = writeIndex + booleans;
+	public void ensureExtraCapacity(int booleans) {
+		
+		// Add the writeIndex / 5 to prevent doing too many array copies
+		int newLength = writeIndex + booleans + writeIndex / 5;
 		if (newLength > this.booleans.length)
 			this.booleans = Arrays.copyOf(this.booleans, newLength);
 	}
