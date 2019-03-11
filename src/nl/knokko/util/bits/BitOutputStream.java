@@ -104,6 +104,7 @@ public class BitOutputStream extends BitOutput {
 			output.flush();
 			output.close();
 		} catch (IOException ex) {
+			throw new IllegalStateException(ex);
 		}
 	}
 }

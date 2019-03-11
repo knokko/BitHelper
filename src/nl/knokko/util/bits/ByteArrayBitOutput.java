@@ -85,9 +85,10 @@ public class ByteArrayBitOutput extends BitOutput {
 
 	@Override
 	public void terminate() {
+		bytes = getBytes();
 	}
 
-	public byte[] getRawBytes() {
+	public byte[] getBackingArray() {
 		return bytes;
 	}
 

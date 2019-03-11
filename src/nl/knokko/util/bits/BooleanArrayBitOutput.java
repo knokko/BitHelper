@@ -60,16 +60,19 @@ public class BooleanArrayBitOutput extends BitOutput {
 	public void ensureExtraCapacity(int booleans) {
 		
 		// Add the writeIndex / 5 to prevent doing too many array copies
-		int newLength = writeIndex + booleans + writeIndex / 5;
+		int newLength = writeIndex + booleans;
 		if (newLength > this.booleans.length)
-			this.booleans = Arrays.copyOf(this.booleans, newLength);
+			this.booleans = Arrays.copyOf(this.booleans, newLength + writeIndex / 5);
 	}
 
 	@Override
 	public void terminate() {
+		
+		// Trim
+		booleans = getBooleans();
 	}
 
-	public boolean[] getRawBooleans() {
+	public boolean[] getBackingArray() {
 		return booleans;
 	}
 
@@ -78,9 +81,9 @@ public class BooleanArrayBitOutput extends BitOutput {
 	}
 
 	public byte[] getBytes() {
-		int size = booleans.length / 8;
+		int size = writeIndex / 8;
 		int safeSize = size;
-		boolean addHalfByte = 8 * size < booleans.length;
+		boolean addHalfByte = 8 * size < writeIndex;
 		if (addHalfByte)
 			size++;// rounding upwards
 		byte[] bytes = new byte[size];
@@ -90,7 +93,7 @@ public class BooleanArrayBitOutput extends BitOutput {
 			boolean[] last = new boolean[8];
 			int index = safeSize * 8;
 			int lastIndex = 0;
-			for (; index < booleans.length; index++)
+			for (; index < writeIndex; index++)
 				last[lastIndex++] = booleans[index];
 			bytes[safeSize] = BitHelper.byteFromBinary(last);
 		}

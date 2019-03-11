@@ -23,9 +23,9 @@
  *******************************************************************************/
 package nl.knokko.util.bits;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 
 public final class BitHelper {
@@ -362,17 +362,8 @@ public final class BitHelper {
 			throw new IOException("File too large (" + file.length() + ")");
 		int length = (int) file.length();
 		byte[] bytes = new byte[length];
-		InputStream input = Files.newInputStream(file.toPath());
-		int index = 0;
-		while (index < length) {
-			int read = input.read(bytes, index, length - index);
-			if (read != -1) {
-				index += read;
-			} else {
-				input.close();
-				throw new IOException("End of file was reached before expected");
-			}
-		}
+		DataInputStream input = new DataInputStream(Files.newInputStream(file.toPath()));
+		input.readFully(bytes);
 		input.close();
 		return bytes;
 	}
