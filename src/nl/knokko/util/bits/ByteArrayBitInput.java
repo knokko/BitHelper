@@ -55,7 +55,9 @@ public class ByteArrayBitInput extends BitInput {
 					"Current byte index is " + byteIndex + " and bound index is " + boundIndex);
 		if (booleanIndex == 7) {
 			booleanIndex = 0;
-			return BitHelper.byteToBinary(bytes[byteIndex++])[7];
+			// return BitHelper.byteToBinary(bytes[byteIndex++])[7];
+			// The line below has the same result as the line above, but is much simpler
+			return bytes[byteIndex++] >= 0;
 		}
 		return BitHelper.byteToBinary(bytes[byteIndex])[booleanIndex++];
 	}
