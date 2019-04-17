@@ -59,7 +59,7 @@ public class ByteArrayBitOutput extends BitOutput {
 			boolean[] values = BitHelper.byteToBinary(value);
 			int valueIndex = 0;
 			boolean[] current = BitHelper.byteToBinary(bytes[byteIndex]);
-			boolean[] next = BitHelper.byteToBinary(bytes[byteIndex + 1]);
+			boolean[] next = new boolean[8];
 			for (; boolIndex < 8; boolIndex++)
 				current[boolIndex] = values[valueIndex++];
 			boolIndex = 0;
